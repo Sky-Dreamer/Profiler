@@ -27,24 +27,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author skyid
+ * @author tphung
  */
 @Entity
 @Table(name = "t_compte")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TCompte.findAll", query = "SELECT t FROM TCompte t")
-    , @NamedQuery(name = "TCompte.findByPkCompte", query = "SELECT t FROM TCompte t WHERE t.pkCompte = :pkCompte")
-    , @NamedQuery(name = "TCompte.findByEmail", query = "SELECT t FROM TCompte t WHERE t.email = :email")
-    , @NamedQuery(name = "TCompte.findByPassword", query = "SELECT t FROM TCompte t WHERE t.password = :password")
-    , @NamedQuery(name = "TCompte.findByNom", query = "SELECT t FROM TCompte t WHERE t.nom = :nom")
-    , @NamedQuery(name = "TCompte.findByPrenom", query = "SELECT t FROM TCompte t WHERE t.prenom = :prenom")
-    , @NamedQuery(name = "TCompte.findByRue", query = "SELECT t FROM TCompte t WHERE t.rue = :rue")
-    , @NamedQuery(name = "TCompte.findByNumRue", query = "SELECT t FROM TCompte t WHERE t.numRue = :numRue")
-    , @NamedQuery(name = "TCompte.findByDateNaissance", query = "SELECT t FROM TCompte t WHERE t.dateNaissance = :dateNaissance")
-    , @NamedQuery(name = "TCompte.findByEntreprise", query = "SELECT t FROM TCompte t WHERE t.entreprise = :entreprise")
-    , @NamedQuery(name = "TCompte.findByTelPrive", query = "SELECT t FROM TCompte t WHERE t.telPrive = :telPrive")
-    , @NamedQuery(name = "TCompte.findByTelProf", query = "SELECT t FROM TCompte t WHERE t.telProf = :telProf")})
+    @NamedQuery(name = "Compte.findAll", query = "SELECT c FROM Compte c")
+    , @NamedQuery(name = "Compte.findByPkCompte", query = "SELECT c FROM Compte c WHERE c.pkCompte = :pkCompte")
+    , @NamedQuery(name = "Compte.findByEmail", query = "SELECT c FROM Compte c WHERE c.email = :email")
+    , @NamedQuery(name = "Compte.findByPassword", query = "SELECT c FROM Compte c WHERE c.password = :password")
+    , @NamedQuery(name = "Compte.findByNom", query = "SELECT c FROM Compte c WHERE c.nom = :nom")
+    , @NamedQuery(name = "Compte.findByPrenom", query = "SELECT c FROM Compte c WHERE c.prenom = :prenom")
+    , @NamedQuery(name = "Compte.findByRue", query = "SELECT c FROM Compte c WHERE c.rue = :rue")
+    , @NamedQuery(name = "Compte.findByNumRue", query = "SELECT c FROM Compte c WHERE c.numRue = :numRue")
+    , @NamedQuery(name = "Compte.findByDateNaissance", query = "SELECT c FROM Compte c WHERE c.dateNaissance = :dateNaissance")
+    , @NamedQuery(name = "Compte.findByEntreprise", query = "SELECT c FROM Compte c WHERE c.entreprise = :entreprise")
+    , @NamedQuery(name = "Compte.findByTelPrive", query = "SELECT c FROM Compte c WHERE c.telPrive = :telPrive")
+    , @NamedQuery(name = "Compte.findByTelProf", query = "SELECT c FROM Compte c WHERE c.telProf = :telProf")})
 public class Compte implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -249,7 +249,7 @@ public class Compte implements Serializable {
 
     @Override
     public String toString() {
-        return "profiler.beans.TCompte[ pkCompte=" + pkCompte + " ]";
+        return "profiler.beans.Compte[ pkCompte=" + pkCompte + " ]";
     }
     
 }

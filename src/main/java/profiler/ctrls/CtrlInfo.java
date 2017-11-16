@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -32,6 +33,9 @@ public class CtrlInfo {
     @Context
     private UriInfo context;
 
+    @Context
+    private HttpServletRequest req;
+    
     private WrkDB wrkDB;
 
     /**
@@ -57,16 +61,18 @@ public class CtrlInfo {
     @GET
     @Path("contacts")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getContacts(@QueryParam("id") Integer id) throws JSONException, IOException {
+    public String getContacts() throws JSONException, IOException {
         HashMap<String, Object> map = new HashMap<>();
 
         ObjectMapper oMapper = new ObjectMapper();
 
-        if (id != null) {
-
-            List<Compte> list = wrkDB.getContacts(id);
+        Compte compte = (Compte)req.getSession().getAttribute("compte");
+        
+        if (compte != null) {
+            List<Compte> list = wrkDB.getContacts(compte.getPkCompte());
 
             map.put("comptes", list);
+  
         }
         
         return oMapper.writeValueAsString(map);

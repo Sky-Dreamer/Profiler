@@ -6,6 +6,7 @@
 package profiler.wrks;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -93,10 +94,14 @@ public class WrkDB {
 
     public boolean verifyLoginInfo(String email, String password) {
         boolean result = false;
-        String passwordHashed = (String) em.createNativeQuery("SELECT password FROM t_compte WHERE email = ?1", Compte.class).setParameter(1, email).getResultList().get(0);
-        if (passwordHashed != null) {
-            result = WrkBCrypt.checkpw(password, passwordHashed);
+        List<String> list = em.createNativeQuery("SELECT password FROM t_compte WHERE email = ?1").setParameter(1, email).getResultList();
+        if (list.size() > 0) {
+            String passwordHashed = (String) list.get(0);
+            if (passwordHashed != null) {
+                result = WrkBCrypt.checkpw(password, passwordHashed);
+            }
         }
+
         return result;
     }
 

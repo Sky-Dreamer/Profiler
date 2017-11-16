@@ -51,7 +51,7 @@ public class CtrlAccount {
     @Path("createaccount")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String createAccount(@QueryParam("account") Compte compte) throws JSONException, IOException {
+    public String createAccount(Compte compte) throws JSONException, IOException {
         ObjectMapper oMapper = new ObjectMapper();
 
         Map<String, Object> map = new HashMap<>();
@@ -77,7 +77,7 @@ public class CtrlAccount {
             if (loginValid) {
                 HttpSession session = req.getSession(true);
                 Compte compte = wrkDB.getCompte(email);
-                session.setAttribute("compte",compte );
+                session.setAttribute("compte", compte);
                 map.put("success", true);
                 map.put("message", "Connecté");
                 map.put("compte", compte);

@@ -24,7 +24,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
- * @author skyid
+ * @author tphung
  */
 @Entity
 @Table(name = "t_localite")
@@ -34,9 +34,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     , @NamedQuery(name = "Localite.findByPkLocalite", query = "SELECT l FROM Localite l WHERE l.pkLocalite = :pkLocalite")
     , @NamedQuery(name = "Localite.findByNom", query = "SELECT l FROM Localite l WHERE l.nom = :nom")})
 public class Localite implements Serializable {
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkLocalite")
-    private List<Compte> tCompteList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -81,6 +78,7 @@ public class Localite implements Serializable {
     }
 
     @XmlTransient
+    @JsonIgnore
     public List<Compte> getCompteList() {
         return compteList;
     }
@@ -112,16 +110,6 @@ public class Localite implements Serializable {
     @Override
     public String toString() {
         return "profiler.beans.Localite[ pkLocalite=" + pkLocalite + " ]";
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<Compte> getTCompteList() {
-        return tCompteList;
-    }
-
-    public void setTCompteList(List<Compte> tCompteList) {
-        this.tCompteList = tCompteList;
     }
     
 }
