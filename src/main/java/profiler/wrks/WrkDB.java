@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import org.mindrot.jbcrypt.WrkBCrypt;
 import profiler.beans.Compte;
 
 /**
@@ -26,11 +27,18 @@ public class WrkDB {
     }
 
     public boolean createUser(Compte compte) {
-        em.getTransaction().begin();
-        em.persist(compte);
-        em.getTransaction().commit();
+        boolean result = false;
+        
+        if ((Long) em.createNativeQuery("SELECT count(*) FROM t_compte WHERE email = ?1").setParameter(1, compte.getEmail()).getResultList().get(0) == 0) {
+            String hashedPassword = WrkBCrypt.hashpw(compte.getPassword(), WrkBCrypt.gensalt());
+            compte.setPassword(hashedPassword);
+            em.getTransaction().begin();
+            em.persist(compte);
+            em.getTransaction().commit();
+            result = true;
+        }
 
-        return true;
+        return result;
     }
 
     public boolean addFriend(int id1, int id2) {
@@ -62,18 +70,28 @@ public class WrkDB {
     }
 
     public Compte getCompte(int id) {
-        return em.find(Compte.class, id);
+        Compte compte = em.find(Compte.class, id);
+        compte.setPassword("");
+        return compte;
     }
 
 //    public Localite getLocalite(int npa) {    
 //        return em.find(Localite.class, npa);
 //    }
-
     public ArrayList<Compte> getContacts(int id) {
         ArrayList<Compte> contacts = null;
         contacts = new ArrayList<>(em.createNativeQuery("SELECT pk_compte, Nom, Prenom, tel_prive, tel_prof FROM t_compte WHERE pk_compte IN (SELECT fk_compte1 FROM r_contact WHERE fk_compte2 = ?1 UNION ALL SELECT fk_compte2 FROM r_contact WHERE fk_compte1 = ?1)", Compte.class).setParameter(1, id).getResultList());
 
         return contacts;
+    }
+
+    public boolean verifyLoginInfo(String email, String password) {
+        boolean result = false;
+        String passwordHashed = (String) em.createNativeQuery("SELECT password FROM t_compte WHERE email = ?1", Compte.class).setParameter(1, email).getResultList().get(0);
+        if (passwordHashed != null) {
+            result = WrkBCrypt.checkpw(password, passwordHashed);
+        }
+        return result;
     }
 
 }
