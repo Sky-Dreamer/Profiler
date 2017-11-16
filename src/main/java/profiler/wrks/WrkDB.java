@@ -28,7 +28,7 @@ public class WrkDB {
 
     public boolean createUser(Compte compte) {
         boolean result = false;
-        
+
         if ((Long) em.createNativeQuery("SELECT count(*) FROM t_compte WHERE email = ?1").setParameter(1, compte.getEmail()).getResultList().get(0) == 0) {
             String hashedPassword = WrkBCrypt.hashpw(compte.getPassword(), WrkBCrypt.gensalt());
             compte.setPassword(hashedPassword);
@@ -71,6 +71,12 @@ public class WrkDB {
 
     public Compte getCompte(int id) {
         Compte compte = em.find(Compte.class, id);
+        compte.setPassword("");
+        return compte;
+    }
+
+    public Compte getCompte(String email) {
+        Compte compte = (Compte) em.createNativeQuery("SELECT * FROM t_compte WHERE email = ?1", Compte.class).setParameter(1, email).getResultList().get(0);
         compte.setPassword("");
         return compte;
     }

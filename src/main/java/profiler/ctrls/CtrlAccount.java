@@ -35,6 +35,9 @@ public class CtrlAccount {
     @Context
     private UriInfo context;
 
+    @Context
+    private HttpServletRequest req;
+
     private WrkDB wrkDB;
 
     /**
@@ -63,16 +66,50 @@ public class CtrlAccount {
     @POST
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
-    public String login(@QueryParam("email") String email, @QueryParam("password") String password, @Context HttpServletRequest req) {
+    public String login(@QueryParam("email") String email, @QueryParam("password") String password) throws IOException {
         ObjectMapper oMapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<>();
 
-        boolean loginValid = wrkDB.verifyLoginInfo(email, password);
+        if (req.getSession().getAttribute("compte") == null) {
 
-        if (loginValid) {
-            HttpSession session = req.getSession(true);
+            boolean loginValid = wrkDB.verifyLoginInfo(email, password);
+
+            if (loginValid) {
+                HttpSession session = req.getSession(true);
+                Compte compte = wrkDB.getCompte(email);
+                session.setAttribute("compte",compte );
+                map.put("success", true);
+                map.put("message", "Connecté");
+                map.put("compte", compte);
+            } else {
+                map.put("success", false);
+                map.put("message", "Login invalide");
+            }
+        } else {
+            map.put("success", false);
+            map.put("message", "Déjà connecté");
         }
-        return "";
+
+        return oMapper.writeValueAsString(map);
+    }
+
+    @GET
+    @Path("logout")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String logout() throws JSONException, IOException {
+        ObjectMapper oMapper = new ObjectMapper();
+
+        Map<String, Object> map = new HashMap<>();
+        boolean result = false;
+
+        if (req.getSession().getAttribute("compte") != null) {
+            req.getSession().invalidate();
+            result = true;
+        }
+
+        map.put("success", result);
+
+        return oMapper.writeValueAsString(map);
     }
 
     @GET
